@@ -1,6 +1,12 @@
 import { Injectable } from '@nestjs/common';
+import { HealthStatus } from './entities/health-status.entity';
 
 @Injectable()
 export class HealthService {
-    // private readonly health = 
+  getStatus(): HealthStatus {
+    return {
+      status: 'ok',
+      timestamp: new Date().toISOString(),
+    };
+  }
 }

@@ -25,6 +25,52 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
+## Conventions de l'API
+
+Cette API suit les conventions de conception suivantes, appliquées de façon cohérente à toutes les ressources :
+
+- **Préfixe global** : toutes les routes commencent par `/api`.
+- **Versioning** : versioning par URI, version courante `v1` (ex. `/api/v1/buildings`). La version par défaut est `1`.
+- **Nommage des ressources** : noms de ressources au pluriel, en anglais (ex. `buildings`, `health`).
+- **Chemins d'URL** : en `kebab-case`.
+- **Corps JSON** : propriétés en `camelCase`.
+- **Dates** : format ISO 8601, en UTC (ex. `2026-08-26T14:30:00Z`).
+- **Format de données** : JSON en entrée et en sortie (`Content-Type: application/json`).
+
+La version d'URI s'applique globalement (`/api/v1/...`), y compris à la ressource `health`.
+
+### Ressource `buildings`
+
+| Méthode | Route                  | Description                          |
+| ------- | ----------------------- | ------------------------------------ |
+| GET     | `/api/v1/buildings`     | Liste tous les bâtiments             |
+| GET     | `/api/v1/buildings/:id` | Récupère un bâtiment par identifiant |
+| POST    | `/api/v1/buildings`     | Crée un nouveau bâtiment             |
+
+**Corps de création** (`POST /api/v1/buildings`) :
+
+```json
+{
+  "name": "Pavillon principal",
+  "address": "7000, rue Marie-Victorin",
+  "yearBuilt": 2005
+}
+```
+
+**Corps de réponse** :
+
+```json
+{
+  "id": 1,
+  "name": "Pavillon principal",
+  "address": "7000, rue Marie-Victorin",
+  "yearBuilt": 2005,
+  "createdAt": "2026-08-26T14:30:00.000Z"
+}
+```
+
+Une requête `GET /api/v1/buildings/:id` avec un identifiant inexistant retourne un code `404 Not Found`.
+
 ## Project setup
 
 ```bash
