@@ -37,7 +37,7 @@ export class BuildingsController {
     isArray: true,
   })
   @Get()
-  findAll(): Building[] {
+  async findAll(): Promise<Building[]> {
     return this.buildingsService.findAll();
   }
 
@@ -55,7 +55,7 @@ export class BuildingsController {
   })
   @ApiProblemNotFoundResponse('Aucun bâtiment ne correspond à cet identifiant.')
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number): Building {
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<Building> {
     return this.buildingsService.findOne(id);
   }
 
@@ -73,7 +73,7 @@ export class BuildingsController {
     },
   })
   @Post()
-  create(@Body() createBuildingDto: CreateBuildingDto): Building {
+  async create(@Body() createBuildingDto: CreateBuildingDto): Promise<Building> {
     return this.buildingsService.create(createBuildingDto);
   }
 }

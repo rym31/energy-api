@@ -1,8 +1,9 @@
 export class Building {
-  id: number;
-  code: string;
-  name: string;
-  address: string;
-  yearBuilt: number;
-  createdAt: string;
+  id!: number;
+  code!: string;
+  name!: string;
+  address!: string;
+  yearBuilt!: number;
+  createdAt!: string;
+  modifiedAt!: string;
 }

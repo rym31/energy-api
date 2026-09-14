@@ -1,31 +1,47 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateBuildingDto } from './dto/create-building.dto';
 import { Building } from './entities/building.entity';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class BuildingsService {
-  private readonly buildings: Building[] = [];
-  private nextId = 1;
+  constructor(
+    @InjectModel('Building') private readonly buildingModel: Model<Building>,
+  ) {
 
-  findAll(): Building[] {
-    return this.buildings;
+  }
+  async findAll(): Promise<Building[]> {
+    return this.buildingModel.find().exec();
   }
 
-  findOne(id: number): Building {
-    const building = this.buildings.find((b) => b.id === id);
+  async findOne(id: number): Promise<Building> {
+    const building = await this.buildingModel.findById(id).exec();
     if (!building) {
-      throw new NotFoundException(`Building with id ${id} not found`);
+      throw new NotFoundException(`Building with ID ${id} not found`);
+    }
+    return building;
+
+  }
+
+  async create(createBuildingDto: CreateBuildingDto): Promise<Building> {
+    return this.buildingModel.create(createBuildingDto);
+
+  }
+
+  async update(id: number, updateBuildingDto: Partial<CreateBuildingDto>): Promise<Building> {
+    const building = await this.buildingModel.findByIdAndUpdate(id, updateBuildingDto, { new: true }).exec();
+    if (!building) {
+      throw new NotFoundException(`Building with ID ${id} not found`);
     }
     return building;
   }
 
-  create(createBuildingDto: CreateBuildingDto): Building {
-    const building: Building = {
-      id: this.nextId++,
-      ...createBuildingDto,
-      createdAt: new Date().toISOString(),
-    };
-    this.buildings.push(building);
-    return building;
+  async remove(id: number): Promise<void> {
+    const result = await this.buildingModel.findByIdAndDelete(id).exec();
+    if (!result) {
+      throw new NotFoundException(`Building with ID ${id} not found`);
+    }
   }
+
 }
