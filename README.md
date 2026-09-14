@@ -71,6 +71,125 @@ La version d'URI s'applique globalement (`/api/v1/...`), y compris à la ressour
 
 Une requête `GET /api/v1/buildings/:id` avec un identifiant inexistant retourne un code `404 Not Found`.
 
+**Exemples curl** :
+
+```bash
+curl http://localhost:3000/api/v1/buildings
+
+curl http://localhost:3000/api/v1/buildings/1
+
+curl -X POST http://localhost:3000/api/v1/buildings \
+  -H "Content-Type: application/json" \
+  -d '{"code":"PC","name":"Pavillon principal","address":"7000, rue Marie-Victorin","yearBuilt":1965}'
+```
+
+### Ressource `rooms`
+
+| Méthode | Route               | Description                    |
+| ------- | -------------------- | ------------------------------- |
+| GET     | `/api/v1/rooms`      | Liste tous les locaux           |
+| GET     | `/api/v1/rooms/:id`  | Récupère un local par identifiant |
+| POST    | `/api/v1/rooms`      | Crée un nouveau local           |
+| PATCH   | `/api/v1/rooms/:id`  | Modifie un local existant       |
+| DELETE  | `/api/v1/rooms/:id`  | Supprime un local               |
+
+**Corps de création** (`POST /api/v1/rooms`) :
+
+```json
+{
+  "code": "S-013",
+  "buildingId": 1,
+  "floor": 2,
+  "type": "Informatique",
+  "capacity": 30
+}
+```
+
+**Corps de réponse** :
+
+```json
+{
+  "id": 1,
+  "code": "S-013",
+  "buildingId": 1,
+  "floor": 2,
+  "type": "Informatique",
+  "capacity": 30,
+  "createdAt": "2026-08-26T14:30:00.000Z"
+}
+```
+
+Une requête `GET /api/v1/rooms/:id`, `PATCH /api/v1/rooms/:id` ou `DELETE /api/v1/rooms/:id` avec un identifiant inexistant retourne un code `404 Not Found`. Une suppression réussie retourne un code `204 No Content`.
+
+**Exemples curl** :
+
+```bash
+curl http://localhost:3000/api/v1/rooms
+
+curl -X POST http://localhost:3000/api/v1/rooms \
+  -H "Content-Type: application/json" \
+  -d '{"code":"S-013","buildingId":1,"floor":2,"type":"Informatique","capacity":30}'
+
+curl -X PATCH http://localhost:3000/api/v1/rooms/1 \
+  -H "Content-Type: application/json" \
+  -d '{"capacity":25}'
+
+curl -X DELETE http://localhost:3000/api/v1/rooms/1
+```
+
+### Ressource `health`
+
+| Méthode | Route               | Description          |
+| ------- | -------------------- | --------------------- |
+| GET     | `/api/v1/health`     | Retourne l'état du service |
+
+**Corps de réponse** :
+
+```json
+{
+  "status": "ok",
+  "timestamp": "2026-08-26T14:30:00.000Z"
+}
+```
+
+**Exemple curl** :
+
+```bash
+curl http://localhost:3000/api/v1/health
+```
+
+### Gestion des erreurs
+
+Les erreurs sont retournées au format `application/problem+json`, conformément à la RFC 7807 :
+
+```json
+{
+  "type": "about:blank",
+  "title": "Not Found",
+  "status": 404,
+  "detail": "Aucun bâtiment ne correspond à cet identifiant.",
+  "instance": "/api/v1/buildings/999"
+}
+```
+
+## Documentation Swagger / OpenAPI
+
+La documentation interactive de l'API est générée automatiquement avec `@nestjs/swagger` :
+
+- **Swagger UI** : [http://localhost:3000/docs](http://localhost:3000/docs)
+- **Document OpenAPI (JSON)** : [http://localhost:3000/docs/openapi.json](http://localhost:3000/docs/openapi.json)
+
+Chaque endpoint y décrit son résumé, ses paramètres, le schéma de son corps de requête/réponse, ainsi que les codes de statut possibles (succès et erreurs).
+
+## Politique de versionnement
+
+L'API utilise un versionnement par URI (ex. `/api/v1/...`).
+
+- **V1** est actuellement la seule version active.
+- Les changements rétrocompatibles (ex. ajout d'un champ optionnel) sont livrés directement dans V1.
+- Les changements non rétrocompatibles (ex. renommage ou suppression d'un champ, changement de comportement) entraînent l'introduction d'une nouvelle version, V2.
+- Lorsqu'une nouvelle version est publiée, l'ancienne version est dépréciée puis maintenue pendant une période de transition avant d'être retirée, afin de laisser le temps aux consommateurs de migrer.
+
 ## Project setup
 
 ```bash

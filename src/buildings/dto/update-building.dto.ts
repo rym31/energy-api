@@ -1,5 +1,4 @@
-export class UpdateBuildingDto {
-  name?: string;
-  address?: string;
-  yearBuilt?: number;
-}
+import { PartialType } from '@nestjs/swagger';
+import { CreateBuildingDto } from './create-building.dto';
+
+export class UpdateBuildingDto extends PartialType(CreateBuildingDto) {}

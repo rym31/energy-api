@@ -1,10 +1,12 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-export class CreateRoomDto {
+export class RoomResponseDto {
+  @ApiProperty({ description: 'Identifiant du local', example: 1 })
+  id!: number;
+
   @ApiProperty({
     description: "Code d'identification du local",
     example: 'S-013',
-    maxLength: 20,
   })
   code!: string;
 
@@ -14,24 +16,24 @@ export class CreateRoomDto {
   })
   buildingId!: number;
 
-  @ApiProperty({
-    description: "Numéro d'étage du local",
-    example: 2,
-    minimum: 0,
-  })
+  @ApiProperty({ description: "Numéro d'étage du local", example: 2 })
   floor!: number;
 
   @ApiPropertyOptional({
     description: 'Type du local',
     example: 'Informatique',
-    maxLength: 100,
   })
   type?: string;
 
   @ApiPropertyOptional({
     description: 'Capacité maximale du local',
     example: 30,
-    minimum: 0,
   })
   capacity?: number;
+
+  @ApiProperty({
+    description: 'Date de création',
+    example: '2026-08-26T14:30:00.000Z',
+  })
+  createdAt!: string;
 }
